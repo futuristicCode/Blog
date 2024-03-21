@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId     Int       @id @default(autoincrement())
+  username   String    @db.VarChar(65)
+  email      String    @unique @db.VarChar(255)
+  password   String    @db.VarChar(255)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  role       Role      @default(USER)
+  posts      Post[]
+  comments   Comment[] @relation("user_comments")
+  profile    Profile?
+}
+
+model Profile {
+  profileId Int    @id @default(autoincrement())
+  image     String
+  bio       String
+  userId    Int    @unique
+  user      User   @relation(fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Post {
+  postId     Int        @id @default(autoincrement())
+  title      String
+  body       String     @db.Text
+  image      String[]
+  published  Status     @default(Draft)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  author     User       @relation(fields: [authorId], references: [userId])
+  authorId   Int
+  categories Category[]
+  comment    Comment[]
+}
+
+model Category {
+  categoryId Int    @id @default(autoincrement())
+  name       String
+  posts      Post[]
+}
+
+model Comment {
+  commentId Int      @id @default(autoincrement())
+  content   String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  postId    Int
+  userId    Int
+  user      User     @relation("user_comments", fields: [userId], references: [userId], onUpdate: Cascade, onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [postId], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Members {
+  memberId Int      @id @default(autoincrement())
+  name     String
+  image    String
+  role     String
+  uploadAt DateTime @default(now())
+}
+
+model Partenaire {
+  partenaireId Int    @id @default(autoincrement())
+  name         String
+  image        String
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Status {
+  Draft
+  Published
+}
