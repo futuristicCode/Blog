@@ -20,6 +20,7 @@ model User {
   password   String    @db.VarChar(255)
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
+  member     Members?   
   role       Role      @default(USER)
   posts      Post[]
   comments   Comment[] @relation("user_comments")
@@ -70,6 +71,8 @@ model Members {
   image    String
   role     String
   uploadAt DateTime @default(now())
+  user      User     @relation(fields: [memberId], references: [userId])
+  userId    Int
 }
 
 model Partenaire {
