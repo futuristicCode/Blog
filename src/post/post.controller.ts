@@ -33,6 +33,12 @@ export class PostController {
     return this.postService.deletePost(postId,userId)
   }
   // ** GET POST BY ID
+  //@UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  getPost(@Param("id", ParseIntPipe) postId: number) {
+    return this.postService.getPost(postId)
+  }
+
   // ** GET ALL POST
   @Get()
   getAllPosts() {

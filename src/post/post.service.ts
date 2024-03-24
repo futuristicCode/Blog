@@ -67,8 +67,27 @@ export class PostService {
 
     //**     GET POST BY ID */
 
-    async getPost() {
-        
+    async getPost(postId:number) {
+        const post = await this.prismaService.post.findUnique({
+            where: { postId },
+            include: {
+                author: {
+                     select: {
+                         userId:true,
+                        username: true,
+                        email: true,
+                        password: false,
+                        created_at: true,
+                        updated_at: true,
+                         role:true
+                     }
+                 },
+                 comment: true,
+                 categories: true
+
+             } 
+        })
+        return post
     }
 
 }
