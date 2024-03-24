@@ -1,16 +1,20 @@
 import { Body, Controller, Delete, Param, ParseIntPipe, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { Request, request } from 'express';
-import { CreateCommentDto } from './dto/createCommentDto';
+import { CreateCommentDto } from './dto/createComment.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { UpdateCommentDto } from './dto/updateCommentDto';
+import { UpdateCommentDto } from './dto/updateComment.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('COMMENTS')
 @Controller('comments')
 export class CommentController {
     constructor(private readonly commentService: CommentService) { }
 
 
     //** CREATE POST */
+    
     @UseGuards(AuthGuard("jwt"))
     @Post()
     createCommentDto(@Req() request: Request,@Body() createCommentDto: CreateCommentDto) {

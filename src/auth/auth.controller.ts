@@ -1,13 +1,15 @@
 import { Body, Controller, Delete, Post, Req, UseGuards } from "@nestjs/common";
-import { SignupDto } from "./dto/signupDto";
+import { SignupDto } from "./dto/signup.dto";
 import { AuthService } from "./auth.service";
-import { SigninDto } from "./dto/signinDto";
-import { ResetPasswordDemandDto } from "./dto/resetPasswordDemandDto";
-import { ResetPasswordConfirmationDto } from "./dto/resetPasswordConfirmationDto";
+import { SigninDto } from "./dto/signin.dto";
+import { ResetPasswordDemandDto } from "./dto/resetPasswordDemand.dto";
+import { ResetPasswordConfirmationDto } from "./dto/resetPasswordConfirmation.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { Request } from "express";
-import { DeleteAccountDto } from "./dto/deleteAccountDto";
+import { DeleteAccountDto } from "./dto/deleteAccount.dto";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 
+@ApiTags('AUTHENTIFICATION')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService :AuthService) {
@@ -31,9 +33,9 @@ export class AuthController {
   resetPasswordCorfirmation(@Body() resetPasswordConfirmationDto: ResetPasswordConfirmationDto){
     return this.authService.resetPasswordConfirmationDto(resetPasswordConfirmationDto)
   }
-
+  @ApiBearerAuth()
   @UseGuards(AuthGuard("jwt"))
-  @Delete("delete")
+  @Delete()
   deleteAccount(@Req() request:Request,@Body() deleteAccountDto: DeleteAccountDto){
     const userid = request.user["userid"]
     return this.authService.deleteAccountDto(userid,deleteAccountDto)

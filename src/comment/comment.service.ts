@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateCommentDto } from './dto/createCommentDto';
-import { UpdateCommentDto } from './dto/updateCommentDto';
+import { CreateCommentDto } from './dto/createComment.dto';
+import { UpdateCommentDto } from './dto/updateComment.dto';
 
 @Injectable()
 export class CommentService {
